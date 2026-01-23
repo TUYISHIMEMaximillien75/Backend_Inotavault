@@ -94,6 +94,16 @@ export class SongsService {
     return song.likes + 1;
   }
 
+  async findAllCategories() {
+    const categories = await this.songRepository.find({
+      select: ["category"],
+
+    });
+
+    const uniqueCategories = [...new Set(categories.map((category) => category.category))];
+    return {categories: ["all", ...uniqueCategories]};
+  }
+
   update(id: number, updateSongDto: UpdateSongDto) {
     return `This action updates a #${id} song`;
   }

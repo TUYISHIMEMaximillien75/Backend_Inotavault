@@ -105,6 +105,11 @@ export class SongsController {
   findOne(@Param('id') id: string) {
     return this.songsService.findOne(id);
   }
+  @Public()
+  @Get('categories')
+  findAllCategories() {
+    return this.songsService.findAllCategories();
+  }
   @Post('like/:id')
   likeSong(@Param('id') id: string) {
     return this.songsService.likeSong(id);

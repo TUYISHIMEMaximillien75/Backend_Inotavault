@@ -10,10 +10,11 @@ import { AuthModule } from "./auth/auth.module";
 import { SongsModule } from './songs/songs.module'; 
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { CommentsModule } from './comments/comments.module';
-import { LikesModule } from './likes/likes.module';
+import { LikesModule } from './likes/likes.module'; 
+import { SongInteractionsModule } from './song_interactions/song_interactions.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeOrmConfig), UsersModule, AuthModule, SongsModule, CloudinaryModule, CommentsModule, LikesModule],
+  imports: [TypeOrmModule.forRoot(typeOrmConfig), UsersModule, AuthModule, SongsModule, CloudinaryModule, CommentsModule, LikesModule, SongInteractionsModule],
   providers: [
     {
       provide: APP_GUARD,
