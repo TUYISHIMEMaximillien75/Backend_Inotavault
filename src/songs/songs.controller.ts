@@ -24,7 +24,7 @@ export class SongsController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['name', 'artist', 'album', 'category', 'description', 'releaseDate'],
+      required: ['name', 'artist', 'category', 'description', 'releaseDate'],
       properties: {
 
         name: { type: 'string' },
@@ -76,7 +76,6 @@ export class SongsController {
     video_file?: Express.Multer.File[];
     coverImage?: Express.Multer.File[];
   } ) {
-
     return this.songsService.createSong(user, createSongDto, files);
   }
 
@@ -110,6 +109,14 @@ export class SongsController {
   findAllCategories() {
     return this.songsService.findAllCategories();
   }
+
+  //search song
+  @Public()
+  @Get('search')
+  searchSong(@Query('query') query: string) {
+    return this.songsService.searchSong(query);
+  }
+
   @Post('like/:id')
   likeSong(@Param('id') id: string) {
     return this.songsService.likeSong(id);
