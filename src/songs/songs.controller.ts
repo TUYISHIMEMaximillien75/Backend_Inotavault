@@ -110,12 +110,28 @@ export class SongsController {
     return this.songsService.findAllCategories();
   }
 
+  // get songs by uploader id by query
+  @ApiSecurity('JWT-auth')
+  @UseGuards(JwtAuthGuard)
+  @Get('uploader')
+  getSongsByUploaderId(@Query('uploader_id') uploader_id: string) {
+    return this.songsService.getSongsByUploaderId(uploader_id);
+  }
+
   //search song
   @Public()
   @Get('search')
   searchSong(@Query('query') query: string) {
     return this.songsService.searchSong(query);
   }
+  
+  @ApiSecurity('JWT-auth')
+  @UseGuards(JwtAuthGuard)
+  @Get('searchinmylibrary')
+  searchSongInMyLibrary(@CurrentUser() user: User, @Query('query') query: string) {
+    return this.songsService.searchSongInMyLibrary(user, query);
+  }
+
 
   @Post('like/:id')
   likeSong(@Param('id') id: string) {

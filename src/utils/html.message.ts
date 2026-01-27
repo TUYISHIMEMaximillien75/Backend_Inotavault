@@ -41,9 +41,11 @@ export const htmlMessage = (link: string): string => {
                 </p>
 
                 <!-- Button -->
-                <div style="text-align:center; margin:30px 0; cursor: pointer;">
                   <a href="${link}"
                      style="
+                       text-align:center;
+                       margin:30px 0;
+                       cursor: pointer;
                        background:#2563eb;
                        color:#ffffff;
                        padding:14px 28px;
@@ -51,10 +53,10 @@ export const htmlMessage = (link: string): string => {
                        border-radius:6px;
                        font-weight:bold;
                        display:inline-block;
+                       
                      ">
                     Confirm Email
                   </a>
-                </div>
 
                 <p style="font-size:14px; color:#555;">
                   If the button doesn’t work, copy and paste this link into your browser:

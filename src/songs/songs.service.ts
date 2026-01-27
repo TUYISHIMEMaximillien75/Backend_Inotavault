@@ -33,8 +33,10 @@ export class SongsService {
 
     const uploader_id = user.id;
 
+    const category = createSongDto.category.toUpperCase();
     const song = this.songRepository.create({
       ...createSongDto,
+      category,
       uploader_id,
       pdf_sheet: pdf?.url,
       audio_file: audio?.url,
@@ -42,7 +44,6 @@ export class SongsService {
       coverImage: coverImage?.url
     });
     const uploadedSong = await this.songRepository.save(song);
-    console.log(uploadedSong);
     return uploadedSong;
   }
 
@@ -109,7 +110,6 @@ export class SongsService {
   //search a song with name or artist or album or category
 
   async searchSong(query: string) {
-    console.log(query);
     const songs = await this.songRepository.find({
       where:[
         {name: ILike(`%${query}%`)},
@@ -119,6 +119,29 @@ export class SongsService {
       ] 
     });
     return songs;
+  }
+
+  async searchSongInMyLibrary (user: User, query: string){
+    const songs = await this.songRepository.find({
+      where:{
+        uploader_id: user.id,
+        name: ILike(`%${query}%`),
+      }
+    });
+    return {songs};
+  }
+
+  async getSongsByUploaderId(uploader_id: string){
+    const songs = await this.songRepository.find({
+      where:{
+        uploader_id: uploader_id
+      }
+    });
+
+
+const uniqueCategories = [...new Set(songs.map((category) => category.category))];
+    return {songs, categories: [...uniqueCategories]};    
+
   }
 
   update(id: number, updateSongDto: UpdateSongDto) {
