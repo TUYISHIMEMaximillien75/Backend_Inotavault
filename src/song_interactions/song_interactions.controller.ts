@@ -1,10 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Ip } from '@nestjs/common';
 import { SongInteractionsService } from './song_interactions.service';
 import { CreateSongInteractionDto } from './dto/create-song_interaction.dto';
 import { UpdateSongInteractionDto } from './dto/update-song_interaction.dto';
 import { ApiSecurity } from '@nestjs/swagger';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { User } from 'src/users/entities/user.entity';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+
 
 @Controller('song-interactions')
 export class SongInteractionsController {
@@ -13,9 +16,8 @@ export class SongInteractionsController {
   @ApiSecurity('JWT-auth')
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createSongInteractionDto: CreateSongInteractionDto) {
-    console.log(createSongInteractionDto);
-    return this.songInteractionsService.create(createSongInteractionDto);
+  create(@Body() createSongInteractionDto: CreateSongInteractionDto, @Ip() ip_address: string, @CurrentUser() user: User) {
+    return this.songInteractionsService.create(createSongInteractionDto,ip_address,user);
   }
 
   @Get()

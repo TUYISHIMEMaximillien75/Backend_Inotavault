@@ -10,6 +10,11 @@ export class SongInteraction {
 
     @Column('uuid')
     song_id: string;
+    
+    @Column({
+        nullable: true
+    })
+    ip_address: string
 
     @Column()
     action: string;

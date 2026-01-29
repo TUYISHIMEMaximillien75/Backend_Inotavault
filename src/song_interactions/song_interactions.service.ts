@@ -4,6 +4,8 @@ import { UpdateSongInteractionDto } from './dto/update-song_interaction.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SongInteraction } from './entities/song_interaction.entity';
+import { User } from 'src/users/entities/user.entity';
+
 @Injectable()
 export class SongInteractionsService {
 
@@ -12,9 +14,15 @@ export class SongInteractionsService {
     private readonly songInteractionsRepository: Repository<SongInteraction>
   ){}
 
-  create(createSongInteractionDto: CreateSongInteractionDto) {
-
-    const songInteraction = this.songInteractionsRepository.create(createSongInteractionDto);
+  create(createSongInteractionDto: CreateSongInteractionDto, ip_address:string, user: User) {
+    console.log(ip_address, user.id);
+    console.log(createSongInteractionDto)
+    const user_id = user.id
+    const songInteractions = {
+      user_id: user.id,
+      ip_address
+      }
+    const songInteraction = this.songInteractionsRepository.create({...createSongInteractionDto, ip_address, user_id});
     return this.songInteractionsRepository.save(songInteraction);
 
     return 'This action adds a new songInteraction';
