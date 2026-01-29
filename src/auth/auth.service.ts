@@ -4,6 +4,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { comparePassword } from 'src/utils/Password.util';
 import { generateToken } from 'src/utils/jwt';
+import { User } from 'src/users/entities/user.entity';
 @Injectable()
 export class AuthService {
     constructor(
@@ -43,7 +44,7 @@ export class AuthService {
         if(!user.verified){
             throw new UnauthorizedException("User is not verified")
         }
-        const token = await generateToken(user);
+        const token = generateToken(user);
         return {
             message: "User login successfully",
             user: {
@@ -53,6 +54,10 @@ export class AuthService {
             }
         }
                 
+    }
+
+    async profile(user: User){
+        return user
     }
 
 }

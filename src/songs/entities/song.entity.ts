@@ -60,6 +60,12 @@ export class Song {
     })
     view_count: number;
 
+    @Column({
+        default: 0
+    })
+    downloads_count: number;
+    
+
     @CreateDateColumn()
     createdAt: Date;
 

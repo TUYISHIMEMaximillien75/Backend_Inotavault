@@ -24,7 +24,7 @@ export class SongsController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['name', 'artist', 'album', 'category', 'description', 'releaseDate'],
+      required: ['name', 'artist', 'category', 'description', 'releaseDate'],
       properties: {
 
         name: { type: 'string' },
@@ -76,7 +76,6 @@ export class SongsController {
     video_file?: Express.Multer.File[];
     coverImage?: Express.Multer.File[];
   } ) {
-
     return this.songsService.createSong(user, createSongDto, files);
   }
 
@@ -105,6 +104,35 @@ export class SongsController {
   findOne(@Param('id') id: string) {
     return this.songsService.findOne(id);
   }
+  @Public()
+  @Get('categories')
+  findAllCategories() {
+    return this.songsService.findAllCategories();
+  }
+
+  // get songs by uploader id by query
+  @ApiSecurity('JWT-auth')
+  @UseGuards(JwtAuthGuard)
+  @Get('uploader')
+  getSongsByUploaderId(@Query('uploader_id') uploader_id: string) {
+    return this.songsService.getSongsByUploaderId(uploader_id);
+  }
+
+  //search song
+  @Public()
+  @Get('search')
+  searchSong(@Query('query') query: string) {
+    return this.songsService.searchSong(query);
+  }
+  
+  @ApiSecurity('JWT-auth')
+  @UseGuards(JwtAuthGuard)
+  @Get('searchinmylibrary')
+  searchSongInMyLibrary(@CurrentUser() user: User, @Query('query') query: string) {
+    return this.songsService.searchSongInMyLibrary(user, query);
+  }
+
+
   @Post('like/:id')
   likeSong(@Param('id') id: string) {
     return this.songsService.likeSong(id);

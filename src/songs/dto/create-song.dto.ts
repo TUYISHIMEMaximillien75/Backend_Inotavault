@@ -21,7 +21,7 @@ export class CreateSongDto {
 
    @ApiProperty({ example: "Album Name" })
    @IsString()
-   album: string;
+   album?: string;
 
    @ApiProperty({ example: "https://youtube.com/..." })
    @IsOptional()

@@ -20,7 +20,7 @@ export const sendEmail = async (to: string, subject: string, userId: string) => 
 
     let VerficationLink = '';
     if (process.env.NODE_ENV === 'development') {
-        VerficationLink = `${process.env.BACKEND_HOST}:${process.env.PORT}/auth/verify/${userId}`
+        VerficationLink = `${process.env.BACKEND_DEV_HOST}:${process.env.FRONT_END_PORT}/auth/verify/${userId}`
     } else if (process.env.NODE_ENV === 'production') {
         VerficationLink = `${process.env.BACKEND_HOST}/auth/verify/${userId}`
     }
