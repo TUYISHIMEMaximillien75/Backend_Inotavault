@@ -127,9 +127,9 @@ export class SongsController {
 
   @Public()
   @Get('searchincategory')
-  searchIncategory(@Query('query') query: string, @Query('category') category: string) {
-    console.log("yes sir")
-    return this.songsService.searchIncategory(query, category);
+  async searchIncategory(@Query('query') query: string, @Query('category') category: string) {
+    const results = await this.songsService.searchIncategory(query, category);
+    return results;
   }
   
   @ApiSecurity('JWT-auth')

@@ -8,6 +8,9 @@ import { Song } from "../songs/entities/song.entity";
 import { Comment } from "../comments/entities/comment.entity";
 import { Like } from "src/likes/entities/like.entity";
 import { SongInteraction } from "src/song_interactions/entities/song_interaction.entity";
+import { Repertoire } from "src/repertoire/entities/repertoire.entity";
+import { RepertoireSection } from "src/repertoire/entities/repertoire-section.entity";
+import { RepertoireSong } from "src/repertoire/entities/repertoire-song.entity";
 let typeOrmConfig: TypeOrmModuleOptions;
 if (process.env.NODE_ENV === "production") {
 
@@ -15,10 +18,10 @@ if (process.env.NODE_ENV === "production") {
   typeOrmConfig = {
     type: "postgres",
     url: process.env.DB_URL,
-    entities: [User, Song, Comment, Like],
-    synchronize: true, 
+    entities: [User, Song, Comment, Like, Repertoire, RepertoireSection, RepertoireSong],
+    synchronize: true,
   };
-}else{
+} else {
   typeOrmConfig = {
     type: "postgres",
     host: process.env.DB_HOST,
@@ -26,12 +29,12 @@ if (process.env.NODE_ENV === "production") {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD, // must be string
     database: process.env.DB_NAME,
-    entities: [User, Song, Comment, Like, SongInteraction],
+    entities: [User, Song, Comment, Like, SongInteraction, Repertoire, RepertoireSection, RepertoireSong],
     synchronize: true,
     // ssl: false,
   };
- 
+
 }
 
-export {typeOrmConfig}
+export { typeOrmConfig }
 export const dataSource = new DataSource(typeOrmConfig as DataSourceOptions);
