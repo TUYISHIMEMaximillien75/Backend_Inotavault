@@ -25,18 +25,19 @@ export class UsersService {
         const user = this.userRepo.create({
             name,
             email,
-            password: hashedPassowrd
+            password: hashedPassowrd,
+            verified: true
         })
 
         const inserted = await this.userRepo.save(user)
 
-        if(inserted){
-            if(process.env.NODE_ENV === 'development'){
-                await sendEmail(email,"Account Verfication Link", inserted.id);
-            }else if(process.env.NODE_ENV === 'production'){
-                this.mailService.sendEmail(email, "Account Verfication Link", inserted.id);
-            }
-        }
+        // if(inserted){
+        //     if(process.env.NODE_ENV === 'development'){
+        //         await sendEmail(email,"Account Verfication Link", inserted.id);
+        //     }else if(process.env.NODE_ENV === 'production'){
+        //         this.mailService.sendEmail(email, "Account Verfication Link", inserted.id);
+        //     }
+        // }
         
         return inserted
     }

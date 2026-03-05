@@ -49,30 +49,30 @@ export class SongsService {
 
   findAll(category: string) {
 
-    if(category === "all"){
+    if (category === "all") {
       return this.songRepository.find();
     }
 
     const songs = this.songRepository.find({
-      where:{
+      where: {
         category: category
       },
-       //order randomly
-       order: {
+      //order randomly
+      order: {
         id: "ASC"
-       }
+      }
     });
     return songs;
   }
 
   async findOne(id: string) {
     const song = await this.songRepository.findOne({
-      where:{
+      where: {
         id: id
       }
     });
 
-    if(!song){
+    if (!song) {
       throw new Error("Song not found");
     }
 
@@ -83,12 +83,12 @@ export class SongsService {
 
   async likeSong(id: string) {
     const song = await this.songRepository.findOne({
-      where:{
+      where: {
         id: id
       }
     });
 
-    if(!song){
+    if (!song) {
       throw new Error("Song not found");
     }
 
@@ -104,43 +104,55 @@ export class SongsService {
     });
 
     const uniqueCategories = [...new Set(categories.map((category) => category.category))];
-    return {categories: ["all", ...uniqueCategories]};
+    return { categories: ["all", ...uniqueCategories] };
   }
 
   //search a song with name or artist or album or category
 
   async searchSong(query: string) {
     const songs = await this.songRepository.find({
-      where:[
-        {name: ILike(`%${query}%`)},
-        {artist: ILike(`%${query}%`)},
-        {album: ILike(`%${query}%`)},
-        {category: ILike(`%${query}%`)},
-      ] 
+      where: [
+        { name: ILike(`%${query}%`) },
+        { artist: ILike(`%${query}%`) },
+        { album: ILike(`%${query}%`) },
+        { category: ILike(`%${query}%`) },
+      ]
     });
     return songs;
   }
 
-  async searchSongInMyLibrary (user: User, query: string){
+  async searchIncategory(query: string, category: string) {
     const songs = await this.songRepository.find({
-      where:{
+      where: [
+        { category: category, name: ILike(`%${query}%`) },
+        { category: category, artist: ILike(`%${query}%`) },
+        { category: category, album: ILike(`%${query}%`) }
+      ]
+    });
+    return songs;
+
+  }
+
+  async searchSongInMyLibrary(user: User, query: string) {
+    const songs = await this.songRepository.find({
+      where: {
         uploader_id: user.id,
         name: ILike(`%${query}%`),
       }
     });
-    return {songs};
+    return { songs };
   }
 
-  async getSongsByUploaderId(uploader_id: string){
+  async getSongsByUploaderId(uploader_id: string) {
     const songs = await this.songRepository.find({
-      where:{
+      where: {
         uploader_id: uploader_id
       }
     });
 
 
-const uniqueCategories = [...new Set(songs.map((category) => category.category))];
-    return {songs, categories: [...uniqueCategories]};    
+    const uniqueCategories = [...new Set(songs.map((category) => category.category))];
+    return { songs, categories: [...uniqueCategories] };
 
   }
 
