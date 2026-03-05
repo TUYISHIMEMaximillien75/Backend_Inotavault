@@ -11,7 +11,7 @@ export class CreateSongDto {
    @IsString()
    description: string;
 
-   @ApiProperty({ example: "Gospel" })
+   @ApiProperty({ example: "GUTURA" })
    @IsString()
    category: string;
 

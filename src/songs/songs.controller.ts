@@ -124,6 +124,13 @@ export class SongsController {
   searchSong(@Query('query') query: string) {
     return this.songsService.searchSong(query);
   }
+
+  @Public()
+  @Get('searchincategory')
+  searchIncategory(@Query('query') query: string, @Query('category') category: string) {
+    console.log("yes sir")
+    return this.songsService.searchIncategory(query, category);
+  }
   
   @ApiSecurity('JWT-auth')
   @UseGuards(JwtAuthGuard)

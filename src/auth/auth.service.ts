@@ -9,39 +9,43 @@ import { User } from 'src/users/entities/user.entity';
 export class AuthService {
     constructor(
         private readonly userServices: UsersService
-    ){}
+    ) { }
 
-    async Register(dto: RegisterDto){
+    async Register(dto: RegisterDto) {
         const user = await this.userServices.createUser(
             dto.name,
             dto.email,
             dto.password
         )
 
+        const token = generateToken(user);
+
         return {
             message: "User register successfully",
             user: {
                 id: user.id,
                 name: user.name,
-                email: user.email
-            }
+                email: user.email,
+                token
+
+            },
         }
     }
 
-    async verifyUser(id:string){
+    async verifyUser(id: string) {
         return this.userServices.verifyUser(id)
     }
 
-    async Login(dto: LoginDto){
+    async Login(dto: LoginDto) {
         const user = await this.userServices.findByEmail(dto.email)
-        if(!user){
+        if (!user) {
             throw new UnauthorizedException("Invalid credentials")
         }
         const isPasswordMatched = await comparePassword(dto.password, user.password)
-        if(!isPasswordMatched){
+        if (!isPasswordMatched) {
             throw new UnauthorizedException("Invalid credentials")
         }
-        if(!user.verified){
+        if (!user.verified) {
             throw new UnauthorizedException("User is not verified")
         }
         const token = generateToken(user);
@@ -53,10 +57,10 @@ export class AuthService {
                 token: token
             }
         }
-                
+
     }
 
-    async profile(user: User){
+    async profile(user: User) {
         return user
     }
 
