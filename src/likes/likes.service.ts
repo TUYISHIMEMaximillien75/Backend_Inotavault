@@ -3,7 +3,7 @@ import { CreateLikeDto } from './dto/create-like.dto';
 import { UpdateLikeDto } from './dto/update-like.dto';
 import { Repository } from 'typeorm';
 import { Like } from './entities/like.entity';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()

@@ -4,10 +4,10 @@ import { CreateSongInteractionDto } from './dto/create-song_interaction.dto';
 import { UpdateSongInteractionDto } from './dto/update-song_interaction.dto';
 import { ApiSecurity } from '@nestjs/swagger';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { User } from 'src/users/entities/user.entity';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
-import { Public } from 'src/auth/decorators/public.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { User } from '../users/entities/user.entity';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('song-interactions')
 export class SongInteractionsController {

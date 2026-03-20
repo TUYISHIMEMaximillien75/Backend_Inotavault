@@ -4,9 +4,9 @@ import { UpdateSongDto } from './dto/update-song.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Song } from './entities/song.entity';
 import { ILike, Repository } from 'typeorm';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
-import { User } from 'src/users/entities/user.entity';
-import { NotificationsService } from 'src/notifications/notifications.service';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { User } from '../users/entities/user.entity';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class SongsService {

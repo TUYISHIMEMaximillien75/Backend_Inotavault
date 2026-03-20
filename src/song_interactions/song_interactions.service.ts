@@ -4,7 +4,7 @@ import { UpdateSongInteractionDto } from './dto/update-song_interaction.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SongInteraction } from './entities/song_interaction.entity';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class SongInteractionsService {

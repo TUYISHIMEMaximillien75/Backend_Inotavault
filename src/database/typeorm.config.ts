@@ -6,12 +6,12 @@ import { DataSource, DataSourceOptions } from "typeorm";
 import { User } from "../users/entities/user.entity";
 import { Song } from "../songs/entities/song.entity";
 import { Comment } from "../comments/entities/comment.entity";
-import { Like } from "src/likes/entities/like.entity";
-import { SongInteraction } from "src/song_interactions/entities/song_interaction.entity";
-import { Repertoire } from "src/repertoire/entities/repertoire.entity";
-import { RepertoireSection } from "src/repertoire/entities/repertoire-section.entity";
-import { RepertoireSong } from "src/repertoire/entities/repertoire-song.entity";
-import { Notification } from "src/notifications/entities/notification.entity";
+import { Like } from "../likes/entities/like.entity";
+import { SongInteraction } from "../song_interactions/entities/song_interaction.entity";
+import { Repertoire } from "../repertoire/entities/repertoire.entity";
+import { RepertoireSection } from "../repertoire/entities/repertoire-section.entity";
+import { RepertoireSong } from "../repertoire/entities/repertoire-song.entity";
+import { Notification } from "../notifications/entities/notification.entity";
 let typeOrmConfig: TypeOrmModuleOptions;
 if (process.env.NODE_ENV === "production") {
 

@@ -1,5 +1,5 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import cloudinary from 'src/config/cloudinary';
+import cloudinary from '../config/cloudinary';
 import { Readable } from 'stream';
 
 @Injectable()

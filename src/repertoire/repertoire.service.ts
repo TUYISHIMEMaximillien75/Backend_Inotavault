@@ -5,8 +5,8 @@ import { CreateRepertoireDto } from './dto/create-repertoire.dto';
 import { Repertoire } from './entities/repertoire.entity';
 import { RepertoireSection } from './entities/repertoire-section.entity';
 import { RepertoireSong } from './entities/repertoire-song.entity';
-import { User } from 'src/users/entities/user.entity';
-import { Song } from 'src/songs/entities/song.entity';
+import { User } from '../users/entities/user.entity';
+import { Song } from '../songs/entities/song.entity';
 
 @Injectable()
 export class RepertoireService {

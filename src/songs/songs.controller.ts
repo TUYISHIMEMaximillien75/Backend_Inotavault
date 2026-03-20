@@ -6,12 +6,12 @@ import { UpdateSongDto } from './dto/update-song.dto';
 import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { ApiBody, ApiConsumes, ApiSecurity } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
-import { Public } from 'src/auth/decorators/public.decorator';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { Public } from '../auth/decorators/public.decorator';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 
 @Controller('songs')
 export class SongsController {

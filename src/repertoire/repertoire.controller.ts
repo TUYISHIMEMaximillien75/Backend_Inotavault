@@ -10,9 +10,9 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { User } from 'src/users/entities/user.entity';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { User } from '../users/entities/user.entity';
 import { CreateRepertoireDto } from './dto/create-repertoire.dto';
 import { RepertoireService } from './repertoire.service';
 

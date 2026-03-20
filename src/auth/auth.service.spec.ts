@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -29,7 +29,7 @@ describe('AuthService', () => {
   });
 
   it('should create a user', async () => {
-    const user = await service.createUser("Max Land Empire", "maxlandempire@gmail.com", "password");
+    const user = await service.Register({ name: "Max Land Empire", email: "maxlandempire@gmail.com", password: "password" });
     expect(user).toBeDefined();
   });
 });
