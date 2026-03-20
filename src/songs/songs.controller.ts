@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFiles, UseInterceptors, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFiles, UseInterceptors, Query, UploadedFile } from '@nestjs/common';
 import { SongsService } from './songs.service';
 import { CreateSongDto } from './dto/create-song.dto';
 import { UpdateSongDto } from './dto/update-song.dto';
 
-import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { ApiBody, ApiConsumes, ApiSecurity } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -79,6 +79,31 @@ export class SongsController {
     return this.songsService.createSong(user, createSongDto, files);
   }
 
+  @ApiSecurity('JWT-auth')
+  @UseGuards(JwtAuthGuard)
+  @Post('upload-for-repertoire')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['name', 'pdf_sheet'],
+      properties: {
+        name: { type: 'string', description: 'Song name / title' },
+        pdf_sheet: { type: 'string', format: 'binary' },
+      },
+    },
+  })
+  @UseInterceptors(
+    FileInterceptor('pdf_sheet', { storage: memoryStorage() }),
+  )
+  uploadForRepertoire(
+    @CurrentUser() user: User,
+    @Body('name') name: string,
+    @UploadedFile() pdfFile: Express.Multer.File,
+  ) {
+    return this.songsService.createSongForRepertoire(user, name, pdfFile);
+  }
+
   @Public()
   @Get('/allsong')
   // gettiing page number and limit for pagination 
@@ -141,17 +166,22 @@ export class SongsController {
 
 
   @Post('like/:id')
-  likeSong(@Param('id') id: string) {
-    return this.songsService.likeSong(id);
+  likeSong(@Param('id') id: string, @CurrentUser() user?: User) {
+    return this.songsService.likeSong(id, user);
+  }
+
+  @Post('share/:id')
+  shareSong(@Param('id') id: string, @CurrentUser() user?: User) {
+    return this.songsService.shareSong(id, user);
   }
 
   @Patch('song/:id')
   update(@Param('id') id: string, @Body() updateSongDto: UpdateSongDto) {
-    return this.songsService.update(+id, updateSongDto);
+    return this.songsService.update(id, updateSongDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.songsService.remove(+id);
+    return this.songsService.remove(id);
   }
 }

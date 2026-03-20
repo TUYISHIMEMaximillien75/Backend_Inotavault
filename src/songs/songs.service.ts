@@ -6,12 +6,15 @@ import { Song } from './entities/song.entity';
 import { ILike, Repository } from 'typeorm';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { User } from 'src/users/entities/user.entity';
+import { NotificationsService } from 'src/notifications/notifications.service';
+
 @Injectable()
 export class SongsService {
   constructor(
     @InjectRepository(Song)
     private readonly songRepository: Repository<Song>,
-    private readonly cloudinaryService: CloudinaryService
+    private readonly cloudinaryService: CloudinaryService,
+    private readonly notificationsService: NotificationsService
   ) { }
 
   async createSong(user: User, createSongDto: CreateSongDto,
@@ -47,6 +50,28 @@ export class SongsService {
     return uploadedSong;
   }
 
+  /**
+   * Lightweight upload used inside the repertoire builder.
+   * Only a name and a PDF are required; the song is marked as `upload_source='repertoire'`
+   * so the uploader can see and edit it later from /dashboard/songs.
+   */
+  async createSongForRepertoire(
+    user: User,
+    name: string,
+    pdfFile: Express.Multer.File,
+  ): Promise<Song> {
+    const pdf = await this.cloudinaryService.uploadFile(pdfFile, 'songs/pdf');
+
+    const song = this.songRepository.create({
+      name,
+      uploader_id: user.id,
+      pdf_sheet: pdf.url,
+      upload_source: 'repertoire',
+      category: 'UPLOADED',
+    });
+    return this.songRepository.save(song);
+  }
+
   findAll(category: string) {
 
     if (category === "all") {
@@ -73,7 +98,7 @@ export class SongsService {
     });
 
     if (!song) {
-      throw new Error("Song not found");
+      return null;
     }
 
     const view_count = song.view_count + 1;
@@ -81,7 +106,7 @@ export class SongsService {
     return song;
   }
 
-  async likeSong(id: string) {
+  async likeSong(id: string, user?: User) {
     const song = await this.songRepository.findOne({
       where: {
         id: id
@@ -94,7 +119,39 @@ export class SongsService {
 
     const likes = song.likes + 1;
     await this.songRepository.update(id, { likes });
+    
+    // Create notification
+    const actionBy = user?.name || "Someone";
+    await this.notificationsService.createNotification(
+      song.uploader_id,
+      actionBy,
+      song.name,
+      'LIKE',
+      `${actionBy} liked your song ${song.name}`
+    );
+
     return song.likes + 1;
+  }
+
+  async shareSong(id: string, user?: User) {
+    const song = await this.songRepository.findOne({
+      where: { id: id }
+    });
+
+    if (!song) {
+      throw new Error("Song not found");
+    }
+
+    const actionBy = user?.name || "Someone";
+    await this.notificationsService.createNotification(
+      song.uploader_id,
+      actionBy,
+      song.name,
+      'SHARE',
+      `${actionBy} shared your song ${song.name}`
+    );
+
+    return { message: "Song shared successfully" };
   }
 
   async findAllCategories() {
@@ -178,11 +235,27 @@ export class SongsService {
 
   }
 
-  update(id: number, updateSongDto: UpdateSongDto) {
-    return `This action updates a #${id} song`;
+  async update(id: string, updateSongDto: UpdateSongDto) {
+    const song = await this.songRepository.findOne({ where: { id } });
+    if (!song) {
+      throw new Error(`Song not found`);
+    }
+    
+    // Convert to uppercase category if it's being updated
+    if (updateSongDto.category) {
+      updateSongDto.category = updateSongDto.category.toUpperCase();
+    }
+    
+    await this.songRepository.update(id, updateSongDto);
+    return this.songRepository.findOne({ where: { id } });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} song`;
+  async remove(id: string) {
+    const song = await this.songRepository.findOne({ where: { id } });
+    if (!song) {
+      throw new Error(`Song not found`);
+    }
+    await this.songRepository.remove(song);
+    return { message: "Song successfully deleted" };
   }
 }

@@ -143,7 +143,7 @@ export class RepertoireService {
         // Fetch missing artist info for root songs
         const songIds = repertoire.sections
             .flatMap(sec => sec.songs)
-            .filter(s => s.source === 'existing' && s.song_id)
+            .filter(s => (s.source === 'existing' || s.source === 'uploaded') && s.song_id)
             .map(s => s.song_id);
 
         let artistMap = new Map<string, string>();
@@ -159,7 +159,7 @@ export class RepertoireService {
         const result = JSON.parse(JSON.stringify(repertoire));
         result.sections.forEach(sec => {
             sec.songs.forEach(song => {
-                if (song.source === 'existing' && song.song_id && artistMap.has(song.song_id)) {
+                if ((song.source === 'existing' || song.source === 'uploaded') && song.song_id && artistMap.has(song.song_id)) {
                     song.artist = artistMap.get(song.song_id);
                 }
             });

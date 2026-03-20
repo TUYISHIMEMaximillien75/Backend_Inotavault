@@ -7,16 +7,15 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { User } from 'src/users/entities/user.entity';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
-
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('song-interactions')
 export class SongInteractionsController {
   constructor(private readonly songInteractionsService: SongInteractionsService) { }
 
-  @ApiSecurity('JWT-auth')
-  @UseGuards(JwtAuthGuard)
+  @Public()
   @Post()
-  create(@Body() createSongInteractionDto: CreateSongInteractionDto, @Ip() ip_address: string, @CurrentUser() user: User) {
+  create(@Body() createSongInteractionDto: CreateSongInteractionDto, @Ip() ip_address: string, @CurrentUser() user?: User) {
     return this.songInteractionsService.create(createSongInteractionDto,ip_address,user);
   }
 

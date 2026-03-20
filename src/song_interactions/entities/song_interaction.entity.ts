@@ -5,8 +5,8 @@ export class SongInteraction {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column('uuid')
-    user_id: string;
+    @Column({ type: 'uuid', nullable: true })
+    user_id: string | null;
 
     @Column('uuid')
     song_id: string;

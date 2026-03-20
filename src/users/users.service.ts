@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { hashPassword, comparePassword } from 'src/utils/Password.util';
-import { sendEmail } from 'src/utils/sendEmail';
+// import { sendEmail } from 'src/utils/sendEmail';
 import { MailService } from 'src/utils/sgMailer';
 @Injectable()
 export class UsersService {

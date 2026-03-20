@@ -11,19 +11,23 @@ export class Song {
     @Column()
     name: string;
 
-    @Column()
+    @Column({ nullable: true })
     description: string;
 
-    @Column()
+    @Column({ default: 'UPLOADED' })
     category: string;
 
-    @Column()
+    @Column({ nullable: true })
     artist: string;
 
-    @Column()
+    @Column({ nullable: true })
     album: string;
 
-    @Column()
+    /** 'library' = full upload via SongUpload page; 'repertoire' = PDF uploaded inside a repertoire */
+    @Column({ default: 'library' })
+    upload_source: 'library' | 'repertoire';
+
+    @Column({ nullable: true })
     pdf_sheet: string;
 
     @Column({
@@ -46,7 +50,9 @@ export class Song {
     })
     coverImage: string;
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     releaseDate: Date;
 
     @Column({

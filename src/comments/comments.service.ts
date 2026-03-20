@@ -5,12 +5,16 @@ import { In, Repository } from 'typeorm';
 import { Comment } from './entities/comment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
+import { NotificationsService } from 'src/notifications/notifications.service';
+import { SongsService } from 'src/songs/songs.service';
 
 @Injectable()
 export class CommentsService {
   constructor(
     @InjectRepository(Comment)
-    private readonly commentRepository: Repository<Comment>
+    private readonly commentRepository: Repository<Comment>,
+    private readonly notificationsService: NotificationsService,
+    private readonly songsService: SongsService
   ){}
   async create(user: User, createCommentDto: CreateCommentDto) {
     const userId = user.id;
@@ -20,6 +24,21 @@ export class CommentsService {
       name: user.name,
     });
     const savedComment = await this.commentRepository.save(comment);
+
+    try {
+      const song = await this.songsService.findOne(createCommentDto.song_id);
+      if (song) {
+        await this.notificationsService.createNotification(
+          song.uploader_id,
+          user.name,
+          song.name,
+          'COMMENT',
+          `${user.name} commented on your song ${song.name}`
+        );
+      }
+    } catch (err) {
+      console.error("Failed to notify user of comment", err);
+    }
 
     return savedComment;
     
