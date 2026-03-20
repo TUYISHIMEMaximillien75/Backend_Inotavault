@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import { CreateRepertoireDto } from './dto/create-repertoire.dto';
 import { Repertoire } from './entities/repertoire.entity';
 import { RepertoireSection } from './entities/repertoire-section.entity';
 import { RepertoireSong } from './entities/repertoire-song.entity';
 import { User } from 'src/users/entities/user.entity';
+import { Song } from 'src/songs/entities/song.entity';
 
 @Injectable()
 export class RepertoireService {
@@ -16,6 +17,8 @@ export class RepertoireService {
         private readonly sectionRepository: Repository<RepertoireSection>,
         @InjectRepository(RepertoireSong)
         private readonly songRepository: Repository<RepertoireSong>,
+        @InjectRepository(Song)
+        private readonly rootSongRepository: Repository<Song>,
         private readonly dataSource: DataSource,
     ) { }
 
@@ -126,6 +129,43 @@ export class RepertoireService {
             where: { id, user_id: user.id },
             relations: ['sections', 'sections.songs'],
         });
+    }
+
+    /** Public – no user ownership check, used for shared links */
+    async findOnePublic(id: string): Promise<any> {
+        const repertoire = await this.repertoireRepository.findOne({
+            where: { id },
+            relations: ['sections', 'sections.songs'],
+        });
+
+        if (!repertoire) return null;
+
+        // Fetch missing artist info for root songs
+        const songIds = repertoire.sections
+            .flatMap(sec => sec.songs)
+            .filter(s => s.source === 'existing' && s.song_id)
+            .map(s => s.song_id);
+
+        let artistMap = new Map<string, string>();
+        if (songIds.length > 0) {
+            const rootSongs = await this.rootSongRepository.find({
+                where: { id: In(songIds) },
+                select: ['id', 'artist']
+            });
+            rootSongs.forEach(rs => artistMap.set(rs.id, rs.artist));
+        }
+
+        // Attach artist explicitly to avoid breaking typed/uploaded songs
+        const result = JSON.parse(JSON.stringify(repertoire));
+        result.sections.forEach(sec => {
+            sec.songs.forEach(song => {
+                if (song.source === 'existing' && song.song_id && artistMap.has(song.song_id)) {
+                    song.artist = artistMap.get(song.song_id);
+                }
+            });
+        });
+
+        return result;
     }
 
     async remove(id: string, user: User): Promise<{ message: string }> {

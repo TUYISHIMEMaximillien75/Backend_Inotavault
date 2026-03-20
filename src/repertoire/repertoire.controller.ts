@@ -3,6 +3,7 @@ import {
     Controller,
     Delete,
     Get,
+    NotFoundException,
     Param,
     Post,
     Put,
@@ -50,3 +51,4 @@ export class RepertoireController {
         return this.repertoireService.remove(id, user);
     }
 }
+

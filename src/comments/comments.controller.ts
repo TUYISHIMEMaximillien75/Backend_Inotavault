@@ -29,7 +29,14 @@ export class CommentsController {
   @Public()
   @Get('/allCommentsNumber')
   findAllNumber(@Query('song_id') song_id: string) {
-    return this.commentsService.findAll(song_id);
+    return this.commentsService.findAllNumber(song_id);
+  }
+
+  @Public()
+  @Get('/totalByUploader')
+  totalByUploader(@Query('song_ids') song_ids: string) {
+    const ids = song_ids ? song_ids.split(',').filter(Boolean) : [];
+    return this.commentsService.totalByUploader(ids);
   }
 
   @Get(':id')

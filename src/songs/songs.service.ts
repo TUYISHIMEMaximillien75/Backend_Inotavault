@@ -122,7 +122,15 @@ export class SongsService {
   }
 
   async searchIncategory(query: string, category: string) {
-    const songs = await this.songRepository.find({
+
+    const category_exixsts = await this.songRepository.findOne({
+      where: {
+        category: category
+      }
+    });
+
+    if (category_exixsts) {
+      const songs = await this.songRepository.find({
       where: [
         { category: category, name: ILike(`%${query}%`) },
         { category: category, artist: ILike(`%${query}%`) },
@@ -130,6 +138,19 @@ export class SongsService {
       ]
     });
     return songs;
+    }else{
+      const songs = await this.songRepository.find({
+        where: [
+          { name: ILike(`%${query}%`) },
+          { artist: ILike(`%${query}%`) },
+          { album: ILike(`%${query}%`) }
+        ]
+      });
+      return songs;
+    }
+
+   
+    // return songs;
 
   }
 
@@ -138,6 +159,7 @@ export class SongsService {
       where: {
         uploader_id: user.id,
         name: ILike(`%${query}%`),
+        
       }
     });
     return { songs };

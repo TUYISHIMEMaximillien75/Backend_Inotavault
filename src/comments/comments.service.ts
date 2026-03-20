@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Comment } from './entities/comment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
@@ -44,7 +44,13 @@ export class CommentsService {
     });
 
     return count;
+  }
 
+  async totalByUploader(songIds: string[]): Promise<number> {
+    if (!songIds.length) return 0;
+    return this.commentRepository.count({
+      where: { song_id: In(songIds) },
+    });
   }
 
   findOne(id: number) {

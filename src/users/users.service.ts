@@ -1,8 +1,8 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { hashPassword } from 'src/utils/Password.util';
+import { hashPassword, comparePassword } from 'src/utils/Password.util';
 import { sendEmail } from 'src/utils/sendEmail';
 import { MailService } from 'src/utils/sgMailer';
 @Injectable()
@@ -56,5 +56,31 @@ export class UsersService {
         return this.userRepo.findOne({ where: { email } });
     }
 
+    async findOne(id: string): Promise<User | null> {
+        return this.userRepo.findOne({ where: { id } });
+    }
 
+    async update(id: string, updateData: any): Promise<User> {
+        const user = await this.findOne(id);
+        if (!user) {
+            throw new UnauthorizedException('User not found');
+        }
+
+        if (updateData.password) {
+            if (!updateData.currentPassword) {
+                throw new BadRequestException('Current password is required to change password');
+            }
+            const isMatch = await comparePassword(updateData.currentPassword, user.password);
+            if (!isMatch) {
+                throw new UnauthorizedException('Incorrect current password');
+            }
+            updateData.password = await hashPassword(updateData.password);
+        }
+
+        // Remove currentPassword from updateData before saving to DB
+        delete updateData.currentPassword;
+
+        Object.assign(user, updateData);
+        return this.userRepo.save(user);
+    }
 }
