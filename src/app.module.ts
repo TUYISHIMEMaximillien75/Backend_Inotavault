@@ -14,9 +14,10 @@ import { LikesModule } from './likes/likes.module';
 import { SongInteractionsModule } from './song_interactions/song_interactions.module';
 import { RepertoireModule } from './repertoire/repertoire.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeOrmConfig), UsersModule, AuthModule, SongsModule, CloudinaryModule, CommentsModule, LikesModule, SongInteractionsModule, RepertoireModule, NotificationsModule],
+  imports: [TypeOrmModule.forRoot(typeOrmConfig), UsersModule, AuthModule, SongsModule, CloudinaryModule, CommentsModule, LikesModule, SongInteractionsModule, RepertoireModule, NotificationsModule, AdminModule],
   providers: [
     {
       provide: APP_GUARD,

@@ -20,7 +20,7 @@ export class Song {
     @Column({ nullable: true })
     artist: string;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, default: "Unknown" })
     album: string;
 
     /** 'library' = full upload via SongUpload page; 'repertoire' = PDF uploaded inside a repertoire */
