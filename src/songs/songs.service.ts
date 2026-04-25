@@ -75,17 +75,18 @@ export class SongsService {
   findAll(category: string) {
 
     if (category === "all") {
-      return this.songRepository.find();
+      return this.songRepository.find({
+        order: {
+          createdAt: "DESC"
+        }
+      });
     }
 
     const songs = this.songRepository.find({
       where: {
         category: category
       },
-      //order randomly
-      order: {
-        id: "ASC"
-      }
+      
     });
     return songs;
   }

@@ -12,6 +12,7 @@ import { Repertoire } from "../repertoire/entities/repertoire.entity";
 import { RepertoireSection } from "../repertoire/entities/repertoire-section.entity";
 import { RepertoireSong } from "../repertoire/entities/repertoire-song.entity";
 import { Notification } from "../notifications/entities/notification.entity";
+import { HomeContent } from "../admin/entities/home-content.entity";
 let typeOrmConfig: TypeOrmModuleOptions;
 if (process.env.NODE_ENV === "production") {
 
@@ -19,7 +20,7 @@ if (process.env.NODE_ENV === "production") {
   typeOrmConfig = {
     type: "postgres",
     url: process.env.DB_URL,
-    entities: [User, Song, Comment, Like, SongInteraction, Repertoire, RepertoireSection, RepertoireSong, Notification],
+    entities: [User, Song, Comment, Like, SongInteraction, Repertoire, RepertoireSection, RepertoireSong, Notification, HomeContent],
     synchronize: true,
   };
 } else {
@@ -28,9 +29,9 @@ if (process.env.NODE_ENV === "production") {
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
     username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD, // must be string
+    password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    entities: [User, Song, Comment, Like, SongInteraction, Repertoire, RepertoireSection, RepertoireSong, Notification],
+    entities: [User, Song, Comment, Like, SongInteraction, Repertoire, RepertoireSection, RepertoireSong, Notification, HomeContent],
     synchronize: true,
     // ssl: false,
   };
